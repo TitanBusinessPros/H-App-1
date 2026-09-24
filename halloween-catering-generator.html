@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Halloween Catering Order Form Generator</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --orange: #FF6B00;
+            --purple: #8B008B;
+            --dark: #2C2C2C;
+            --light: #F5F5F5;
+            --green: #228B22;
+            --red: #DC143C;
+            --header-bg: linear-gradient(135deg, #ff8c00, #8b008b);
+            --header-text: #FFFFFF;
+            --form-bg: #FFFFFF;
+            --form-text: #000000;
+            --editor-bg: #2C2C2C;
+            --editor-text: #F5F5F5;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #1a1a1a;
+            color: var(--light);
+            margin: 0;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231a1a1a"/><path d="M20,20 Q40,5 60,20 T100,20 M20,40 Q40,25 60,40 T100,40 M20,60 Q40,45 60,60 T100,60 M20,80 Q40,65 60,80 T100,80" stroke="%23333" fill="none" stroke-width="0.5"/></svg>');
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .editor-panel {
+            flex: 1;
+            min-width: 300px;
+            background: var(--editor-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 107, 0, 0.3);
+            border: 1px solid var(--orange);
+            color: var(--editor-text);
+        }
+        
+        .preview-panel {
+            flex: 2;
+            min-width: 500px;
+            background: var(--form-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(139, 0, 139, 0.3);
+            border: 1px solid var(--purple);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        h1 {
+            color: var(--orange);
+            text-align: center;
+            width: 100%;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px rgba(255, 107, 0, 0.5);
+            font-family: 'Creepster', cursive;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+        }
+        
+        h2 {
+            color: var(--orange);
+            border-bottom: 2px solid var(--purple);
+            padding-bottom: 5px;
+            font-family: 'Eater', cursive;
+        }
+        
+        h3 {
+            font-family: 'Eater', cursive;
+            color: var(--purple);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--editor-text);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--orange);
+            border-radius: 4px;
+            background: #333;
+            color: white;
+            font-family: 'Courier New', monospace;
+        }
+        
+        button {
+            background: var(--orange);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+            transition: all 0.3s;
+            font-family: 'Eater', cursive;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            background: var(--purple);
+            transform: scale(1.05);
+        }
+        
+        button.delete {
+            background: var(--red);
+        }
+        
+        button.add {
+            background: var(--green);
+        }
+        
+        #orderForm {
+            width: 100%;
+            color: var(--form-text);
+            padding: 20px;
+            background: var(--form-bg);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        #logoPreview {
+            max-width: 200px;
+            max-height: 100px;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 1px dashed #ccc;
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+        }
+        
+        .halloween-theme {
+            background: var(--header-bg);
+            color: var(--header-text);
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-family: 'Creepster', cursive;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+        
+        .halloween-theme h3 {
+            color: var(--header-text);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .editor-panel, .preview-panel {
+                min-width: 100%;
+            }
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .total-section {
+            text-align: right;
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+            border-top: 2px solid var(--purple);
+            padding-top: 10px;
+        }
+        
+        .instructions {
+            background: rgba(255, 107, 0, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+        
+        .menu-editor {
+            border: 1px solid var(--purple);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .menu-item-editor {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .menu-item-editor input {
+            flex: 1;
+        }
+        
+        .tax-editor {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .tax-editor input {
+            width: 80px;
+        }
+        
+        .spooky-text {
+            font-family: 'Creepster', cursive;
+            letter-spacing: 1px;
+        }
+        
+        .eater-text {
+            font-family: 'Eater', cursive;
+        }
+        
+        .download-link {
+            display: block;
+            margin-top: 10px;
+            color: var(--orange);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .color-picker {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+        
+        .color-picker input[type="color"] {
+            width: 50px;
+            height: 30px;
+            padding: 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .color-options {
+            border: 1px solid var(--purple);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .preset-button {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Eater&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>Halloween Catering Order Form Generator</h1>
+    
+    <div class="container">
+        <div class="editor-panel">
+            <h2 class="eater-text">Customize Your Form</h2>
+            
+            <div class="instructions">
+                <p>Fill out the form details, upload your logo, and customize your order. Then click "Generate PNG" to export your order form.</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="companyName">Company Name</label>
+                <input type="text" id="companyName" value="Spooky Catering Co.">
+            </div>
+            
+            <div class="form-group">
+                <label for="logoUpload">Upload Company Logo</label>
+                <input type="file" id="logoUpload" accept="image/*">
+                <small>Recommended size: 200x100 pixels</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="eventDate">Event Date</label>
+                <input type="date" id="eventDate">
+            </div>
+            
+            <div class="form-group">
+                <label for="eventTime">Event Time</label>
+                <input type="time" id="eventTime">
+            </div>
+            
+            <div class="form-group">
+                <label for="contactName">Contact Name</label>
+                <input type="text" id="contactName" placeholder="Enter contact name">
+            </div>
+            
+            <div class="form-group">
+                <label for="contactPhone">Contact Phone</label>
+                <input type="tel" id="contactPhone" placeholder="Enter phone number">
+            </div>
+            
+            <div class="form-group">
+                <label for="eventAddress">Event Address</label>
+                <textarea id="eventAddress" rows="3" placeholder="Enter event address"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="specialInstructions">Special Instructions</label>
+                <textarea id="specialInstructions" rows="3" placeholder="Any special requests or instructions"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <h3 class="eater-text">Tax Rate</h3>
+                <div class="tax-editor">
+                    <label for="taxRate">Tax Rate (%):</label>
+                    <input type="number" id="taxRate" min="0" max="50" step="0.1" value="8.0">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h3 class="eater-text">Color Customization</h3>
+                <div class="color-options">
+                    <div class="color-picker">
+                        <label for="headerBgColor">Header Background:</label>
+                        <input type="color" id="headerBgColor" value="#8B008B">
+                    </div>
+                    <div class="color-picker">
+                        <label for="headerTextColor">Header Text:</label>
+                        <input type="color" id="headerTextColor" value="#FFFFFF">
+                    </div>
+                    <div class="color-picker">
+                        <label for="formBgColor">Form Background:</label>
+                        <input type="color" id="formBgColor" value="#FFFFFF">
+                    </div>
+                    <div class="color-picker">
+                        <label for="formTextColor">Form Text:</label>
+                        <input type="color" id="formTextColor" value="#000000">
+                    </div>
+                    
+                    <div class="preset-buttons">
+                        <button class="preset-button" data-preset="classic">Classic Halloween</button>
+                        <button class="preset-button" data-preset="spooky">Spooky Dark</button>
+                        <button class="preset-button" data-preset="elegant">Elegant Purple</button>
+                        <button class="preset-button" data-preset="autumn">Autumn Orange</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h3 class="eater-text">Menu Editor</h3>
+                <div class="menu-editor">
+                    <div id="menuItemsEditor">
+                        <!-- Menu items will be added here dynamically -->
+                    </div>
+                    <button id="addMenuItem" class="add">Add Menu Item</button>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button id="resetForm">Reset Form</button>
+                <button id="generatePNG">Generate PNG</button>
+            </div>
+            
+            <div id="downloadContainer" style="display: none; text-align: center; margin-top: 20px;">
+                <a href="#" id="downloadLink" class="download-link">Click here if your download doesn't start automatically</a>
+            </div>
+        </div>
+        
+        <div class="preview-panel">
+            <h2 class="eater-text">Order Form Preview</h2>
+            <div id="orderForm">
+                <div class="logo-container">
+                    <img id="logoPreview" src="" alt="Company Logo" style="display: none;">
+                    <h2 id="previewCompanyName" class="spooky-text">Spooky Catering Co.</h2>
+                </div>
+                
+                <div class="halloween-theme">
+                    <h3>Halloween Catering Order Form</h3>
+                </div>
+                
+                <div class="form-group">
+                    <p><strong>Event Details:</strong></p>
+                    <p>Date: <span id="previewEventDate">October 31, 2023</span></p>
+                    <p>Time: <span id="previewEventTime">7:00 PM</span></p>
+                    <p>Address: <span id="previewEventAddress">123 Haunted Lane, Transylvania</span></p>
+                </div>
+                
+                <div class="form-group">
+                    <p><strong>Contact Information:</strong></p>
+                    <p>Name: <span id="previewContactName">Count Dracula</span></p>
+                    <p>Phone: <span id="previewContactPhone">(555) 123-4567</span></p>
+                </div>
+                
+                <div class="form-group">
+                    <h3 class="eater-text">Menu Selection</h3>
+                    <div id="menuPreview">
+                        <!-- Menu items will be added here dynamically -->
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <h3 class="eater-text">Special Instructions</h3>
+                    <p id="previewSpecialInstructions">Please include extra spooky decorations!</p>
+                </div>
+                
+                <div class="total-section">
+                    <p>Subtotal: $<span id="subtotal">0.00</span></p>
+                    <p>Tax (<span id="taxRatePreview">8.0</span>%): $<span id="tax">0.00</span></p>
+                    <p>Total: $<span id="total">0.00</span></p>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button id="calculateTotal">Calculate Total</button>
+                <button id="downloadFormPNG">Download PNG</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const companyNameInput = document.getElementById('companyName');
+        const logoUploadInput = document.getElementById('logoUpload');
+        const eventDateInput = document.getElementById('eventDate');
+        const eventTimeInput = document.getElementById('eventTime');
+        const contactNameInput = document.getElementById('contactName');
+        const contactPhoneInput = document.getElementById('contactPhone');
+        const eventAddressInput = document.getElementById('eventAddress');
+        const specialInstructionsInput = document.getElementById('specialInstructions');
+        const taxRateInput = document.getElementById('taxRate');
+        const addMenuItemButton = document.getElementById('addMenuItem');
+        const menuItemsEditor = document.getElementById('menuItemsEditor');
+        const menuPreview = document.getElementById('menuPreview');
+        const downloadContainer = document.getElementById('downloadContainer');
+        const downloadLink = document.getElementById('downloadLink');
+        
+        // Color picker elements
+        const headerBgColorInput = document.getElementById('headerBgColor');
+        const headerTextColorInput = document.getElementById('headerTextColor');
+        const formBgColorInput = document.getElementById('formBgColor');
+        const formTextColorInput = document.getElementById('formTextColor');
+        const presetButtons = document.querySelectorAll('.preset-button');
+        
+        // Preview elements
+        const previewCompanyName = document.getElementById('previewCompanyName');
+        const logoPreview = document.getElementById('logoPreview');
+        const previewEventDate = document.getElementById('previewEventDate');
+        const previewEventTime = document.getElementById('previewEventTime');
+        const previewEventAddress = document.getElementById('previewEventAddress');
+        const previewContactName = document.getElementById('previewContactName');
+        const previewContactPhone = document.getElementById('previewContactPhone');
+        const previewSpecialInstructions = document.getElementById('previewSpecialInstructions');
+        const taxRatePreview = document.getElementById('taxRatePreview');
+        
+        // Total elements
+        const subtotalElement = document.getElementById('subtotal');
+        const taxElement = document.getElementById('tax');
+        const totalElement = document.getElementById('total');
+        
+        // Buttons
+        const calculateTotalButton = document.getElementById('calculateTotal');
+        const generatePNGButton = document.getElementById('generatePNG');
+        const resetFormButton = document.getElementById('resetForm');
+        const downloadFormPNGButton = document.getElementById('downloadFormPNG');
+        
+        // Menu items array
+        let menuItems = [
+            { id: 1, name: "Witch's Brew (Punch)", price: 25, quantity: 0 },
+            { id: 2, name: "Monster Finger Sandwiches", price: 3, quantity: 0 },
+            { id: 3, name: "Jack-o-Lantern Stuffed Peppers", price: 8, quantity: 0 },
+            { id: 4, name: "Graveyard Dip with Tombstone Chips", price: 15, quantity: 0 },
+            { id: 5, name: "Spiderweb Pizza", price: 20, quantity: 0 },
+            { id: 6, name: "Eyeball Cake Pops", price: 2, quantity: 0 }
+        ];
+        
+        // Color presets
+        const colorPresets = {
+            classic: {
+                headerBg: '#8B008B',
+                headerText: '#FFFFFF',
+                formBg: '#FFFFFF',
+                formText: '#000000'
+            },
+            spooky: {
+                headerBg: '#2C2C2C',
+                headerText: '#FF6B00',
+                formBg: '#1a1a1a',
+                formText: '#F5F5F5'
+            },
+            elegant: {
+                headerBg: '#4B0082',
+                headerText: '#FFD700',
+                formBg: '#F0E6FF',
+                formText: '#2C2C2C'
+            },
+            autumn: {
+                headerBg: '#FF6B00',
+                headerText: '#2C2C2C',
+                formBg: '#FFF5E6',
+                formText: '#2C2C2C'
+            }
+        };
+        
+        // Set default date to Halloween (fixed timezone issue)
+        const today = new Date();
+        const halloween = new Date(today.getFullYear(), 9, 31); // October is month 9 (0-indexed)
+        // Format date for input field (YYYY-MM-DD)
+        const formattedHalloween = halloween.toISOString().split('T')[0];
+        eventDateInput.value = formattedHalloween;
+        eventTimeInput.value = "19:00";
+        
+        // Initialize the form
+        initForm();
+        
+        // Event listeners
+        companyNameInput.addEventListener('input', updatePreview);
+        eventDateInput.addEventListener('change', updatePreview);
+        eventTimeInput.addEventListener('change', updatePreview);
+        contactNameInput.addEventListener('input', updatePreview);
+        contactPhoneInput.addEventListener('input', updatePreview);
+        eventAddressInput.addEventListener('input', updatePreview);
+        specialInstructionsInput.addEventListener('input', updatePreview);
+        taxRateInput.addEventListener('input', updateTaxRate);
+        
+        // Color picker event listeners
+        headerBgColorInput.addEventListener('input', updateColors);
+        headerTextColorInput.addEventListener('input', updateColors);
+        formBgColorInput.addEventListener('input', updateColors);
+        formTextColorInput.addEventListener('input', updateColors);
+        
+        // Preset buttons event listeners
+        presetButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const preset = this.getAttribute('data-preset');
+                applyColorPreset(preset);
+            });
+        });
+        
+        logoUploadInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    logoPreview.src = e.target.result;
+                    logoPreview.style.display = 'block';
+                    previewCompanyName.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        addMenuItemButton.addEventListener('click', addMenuItem);
+        calculateTotalButton.addEventListener('click', calculateTotal);
+        generatePNGButton.addEventListener('click', generatePNG);
+        resetFormButton.addEventListener('click', resetForm);
+        downloadFormPNGButton.addEventListener('click', downloadFormPNG);
+        
+        // Functions
+        function initForm() {
+            renderMenuEditor();
+            renderMenuPreview();
+            updatePreview();
+            calculateTotal();
+            updateColors(); // Apply initial colors
+        }
+        
+        function renderMenuEditor() {
+            menuItemsEditor.innerHTML = '';
+            
+            menuItems.forEach((item, index) => {
+                const menuItemEditor = document.createElement('div');
+                menuItemEditor.className = 'menu-item-editor';
+                menuItemEditor.innerHTML = `
+                    <input type="text" class="menu-item-name" value="${item.name}" placeholder="Item name">
+                    <input type="number" class="menu-item-price" value="${item.price}" min="0" step="0.01" placeholder="Price">
+                    <button class="delete" data-index="${index}">Delete</button>
+                `;
+                menuItemsEditor.appendChild(menuItemEditor);
+                
+                // Add event listeners for the new inputs
+                const nameInput = menuItemEditor.querySelector('.menu-item-name');
+                const priceInput = menuItemEditor.querySelector('.menu-item-price');
+                const deleteButton = menuItemEditor.querySelector('.delete');
+                
+                nameInput.addEventListener('input', function() {
+                    menuItems[index].name = this.value;
+                    renderMenuPreview();
+                });
+                
+                priceInput.addEventListener('input', function() {
+                    menuItems[index].price = parseFloat(this.value) || 0;
+                    renderMenuPreview();
+                });
+                
+                deleteButton.addEventListener('click', function() {
+                    if (menuItems.length > 1) {
+                        menuItems.splice(index, 1);
+                        renderMenuEditor();
+                        renderMenuPreview();
+                        calculateTotal();
+                    } else {
+                        alert("You need at least one menu item!");
+                    }
+                });
+            });
+        }
+        
+        function renderMenuPreview() {
+            menuPreview.innerHTML = '';
+            
+            menuItems.forEach((item, index) => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item';
+                menuItem.innerHTML = `
+                    <span>${item.name} - $${item.price.toFixed(2)}</span>
+                    <input type="number" class="quantity-input" id="item-${item.id}" min="0" value="${item.quantity}">
+                `;
+                menuPreview.appendChild(menuItem);
+                
+                // Add event listener for quantity changes
+                const quantityInput = menuItem.querySelector('.quantity-input');
+                quantityInput.addEventListener('input', function() {
+                    menuItems[index].quantity = parseInt(this.value) || 0;
+                    calculateTotal();
+                });
+            });
+        }
+        
+        function addMenuItem() {
+            const newId = menuItems.length > 0 ? Math.max(...menuItems.map(item => item.id)) + 1 : 1;
+            menuItems.push({
+                id: newId,
+                name: "New Menu Item",
+                price: 10,
+                quantity: 0
+            });
+            renderMenuEditor();
+            renderMenuPreview();
+        }
+        
+        function updatePreview() {
+            previewCompanyName.textContent = companyNameInput.value || 'Spooky Catering Co.';
+            
+            // Format date - fixed timezone issue
+            if (eventDateInput.value) {
+                const dateParts = eventDateInput.value.split('-');
+                const year = parseInt(dateParts[0]);
+                const month = parseInt(dateParts[1]) - 1; // Months are 0-indexed
+                const day = parseInt(dateParts[2]);
+                
+                const date = new Date(year, month, day);
+                previewEventDate.textContent = date.toLocaleDateString('en-US', { 
+                    month: 'long', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+            }
+            
+            // Format time
+            if (eventTimeInput.value) {
+                const time = eventTimeInput.value;
+                const [hours, minutes] = time.split(':');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                const formattedHours = hours % 12 || 12;
+                previewEventTime.textContent = `${formattedHours}:${minutes} ${ampm}`;
+            }
+            
+            previewEventAddress.textContent = eventAddressInput.value || '123 Haunted Lane, Transylvania';
+            previewContactName.textContent = contactNameInput.value || 'Count Dracula';
+            previewContactPhone.textContent = contactPhoneInput.value || '(555) 123-4567';
+            previewSpecialInstructions.textContent = specialInstructionsInput.value || 'Please include extra spooky decorations!';
+        }
+        
+        function updateTaxRate() {
+            taxRatePreview.textContent = taxRateInput.value;
+            calculateTotal();
+        }
+        
+        function updateColors() {
+            // Update CSS variables with new color values
+            document.documentElement.style.setProperty('--header-bg', headerBgColorInput.value);
+            document.documentElement.style.setProperty('--header-text', headerTextColorInput.value);
+            document.documentElement.style.setProperty('--form-bg', formBgColorInput.value);
+            document.documentElement.style.setProperty('--form-text', formTextColorInput.value);
+        }
+        
+        function applyColorPreset(presetName) {
+            const preset = colorPresets[presetName];
+            if (preset) {
+                headerBgColorInput.value = preset.headerBg;
+                headerTextColorInput.value = preset.headerText;
+                formBgColorInput.value = preset.formBg;
+                formTextColorInput.value = preset.formText;
+                updateColors();
+            }
+        }
+        
+        function calculateTotal() {
+            let subtotal = 0;
+            
+            menuItems.forEach(item => {
+                subtotal += item.quantity * item.price;
+            });
+            
+            const taxRate = parseFloat(taxRateInput.value) || 0;
+            const tax = subtotal * (taxRate / 100);
+            const total = subtotal + tax;
+            
+            subtotalElement.textContent = subtotal.toFixed(2);
+            taxElement.textContent = tax.toFixed(2);
+            totalElement.textContent = total.toFixed(2);
+        }
+        
+        function generatePNG() {
+            // Calculate total before generating PNG
+            calculateTotal();
+            
+            // Show loading state
+            generatePNGButton.textContent = "Generating...";
+            generatePNGButton.disabled = true;
+            
+            html2canvas(document.getElementById('orderForm'), {
+                scale: 2, // Higher quality
+                useCORS: true, // For logo images
+                logging: false
+            }).then(function(canvas) {
+                const link = document.createElement('a');
+                const fileName = `halloween-catering-order-${new Date().getTime()}.png`;
+                link.download = fileName;
+                link.href = canvas.toDataURL('image/png');
+                
+                // Trigger download
+                link.click();
+                
+                // Also show a manual download link as backup
+                downloadLink.href = link.href;
+                downloadLink.download = fileName;
+                downloadLink.textContent = `Download: ${fileName}`;
+                downloadContainer.style.display = 'block';
+                
+                // Reset button state
+                generatePNGButton.textContent = "Generate PNG";
+                generatePNGButton.disabled = false;
+            }).catch(function(error) {
+                console.error('Error generating PNG:', error);
+                alert('Error generating PNG. Please try again.');
+                generatePNGButton.textContent = "Generate PNG";
+                generatePNGButton.disabled = false;
+            });
+        }
+        
+        function resetForm() {
+            companyNameInput.value = 'Spooky Catering Co.';
+            logoUploadInput.value = '';
+            eventDateInput.value = formattedHalloween;
+            eventTimeInput.value = "19:00";
+            contactNameInput.value = '';
+            contactPhoneInput.value = '';
+            eventAddressInput.value = '';
+            specialInstructionsInput.value = '';
+            taxRateInput.value = '8.0';
+            
+            // Reset menu to default
+            menuItems = [
+                { id: 1, name: "Witch's Brew (Punch)", price: 25, quantity: 0 },
+                { id: 2, name: "Monster Finger Sandwiches", price: 3, quantity: 0 },
+                { id: 3, name: "Jack-o-Lantern Stuffed Peppers", price: 8, quantity: 0 },
+                { id: 4, name: "Graveyard Dip with Tombstone Chips", price: 15, quantity: 0 },
+                { id: 5, name: "Spiderweb Pizza", price: 20, quantity: 0 },
+                { id: 6, name: "Eyeball Cake Pops", price: 2, quantity: 0 }
+            ];
+            
+            // Reset colors to default
+            applyColorPreset('classic');
+            
+            // Reset logo preview
+            logoPreview.src = '';
+            logoPreview.style.display = 'none';
+            previewCompanyName.style.display = 'block';
+            
+            // Hide download link
+            downloadContainer.style.display = 'none';
+            
+            // Reset form
+            renderMenuEditor();
+            renderMenuPreview();
+            updatePreview();
+            updateTaxRate();
+            calculateTotal();
+        }
+        
+        function downloadFormPNG() {
+            calculateTotal();
+            downloadFormPNGButton.textContent = 'Generating...';
+            downloadFormPNGButton.disabled = true;
+
+            html2canvas(document.getElementById('orderForm'), {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                onclone: function(clonedDocument) {
+                    clonedDocument.querySelectorAll('#orderForm .actions').forEach(function(actions) {
+                        actions.style.display = 'none';
+                    });
+                }
+            }).then(function(canvas) {
+                const link = document.createElement('a');
+                link.download = `halloween-catering-order-${new Date().getTime()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(function(error) {
+                console.error('Error downloading order form PNG:', error);
+                alert('Error generating PNG. Please try again.');
+            }).finally(function() {
+                downloadFormPNGButton.textContent = 'Download PNG';
+                downloadFormPNGButton.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>

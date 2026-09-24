@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Horror Trivia Website Builder</title>
+    <style>
+        :root {
+            --primary: #8b0000;
+            --secondary: #1a1a1a;
+            --accent: #ff4500;
+            --text: #f0f0f0;
+            --border: #444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #121212;
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .builder-banner {
+            display: block;
+            width: 100%;
+            max-width: 1200px;
+            height: auto;
+            margin: 0 auto 24px;
+        }
+
+        .publishing-instructions {
+            background-color: #1e1e1e;
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin-bottom: 28px;
+        }
+
+        .publishing-instructions h2 {
+            margin-bottom: 10px;
+        }
+
+        .publishing-instructions p {
+            margin-bottom: 10px;
+        }
+
+        .publishing-instructions ol {
+            padding-left: 24px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 2px solid var(--primary);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+        
+        .builder-section {
+            background-color: var(--secondary);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #2a2a2a;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #a00000;
+        }
+        
+        .preview-section {
+            background-color: var(--secondary);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .preview-container {
+            border: 1px dashed var(--border);
+            padding: 20px;
+            min-height: 400px;
+            background-color: #1e1e1e;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .trivia-question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #2a2a2a;
+            border-left: 4px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .trivia-question:hover {
+            background-color: #333;
+        }
+        
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .answer {
+            display: none;
+            padding: 10px;
+            background-color: #1a1a1a;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .answer.revealed {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .export-section {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .export-btn {
+            background-color: var(--accent);
+            font-size: 1.2rem;
+            padding: 15px 30px;
+        }
+        
+        .export-btn:hover {
+            background-color: #ff5500;
+        }
+        
+        .logo-preview {
+            max-width: 200px;
+            max-height: 100px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        
+        .company-name {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: var(--accent);
+        }
+        
+        .trivia-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+        
+        .question-number {
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+        
+        .click-hint {
+            text-align: center;
+            font-style: italic;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img class="builder-banner" src="images/Top%20image.png" alt="Halloween Website Maker banner">
+    <div class="container">
+        <header>
+            <h1>Halloween Horror Trivia Website Builder</h1>
+            <p>Create your own horror trivia website in just a few steps!</p>
+        </header>
+
+        <section class="publishing-instructions" aria-labelledby="publish-heading">
+            <h2 id="publish-heading">Publish Your Free Website</h2>
+            <p>This builder and the finished trivia website are free. To publish your site with GitHub Pages:</p>
+            <ol>
+                <li>Click <strong>Export as HTML File</strong> to download your finished website as <code>index.html</code>.</li>
+                <li>Create a public repository on GitHub Free and upload <code>index.html</code> to the repository's main folder.</li>
+                <li>Open the repository's <strong>Settings</strong>, choose <strong>Pages</strong>, and set the source to the <code>main</code> branch and <code>/(root)</code>.</li>
+                <li>Save the Pages settings. GitHub will publish your free website at the URL shown in the Pages settings.</li>
+            </ol>
+        </section>
+        
+        <section class="builder-section">
+            <h2>Website Customization</h2>
+            <div class="form-group">
+                <label for="companyName">Company Name</label>
+                <input type="text" id="companyName" placeholder="Enter your company name">
+            </div>
+            <div class="form-group">
+                <label for="logoUpload">Upload Logo</label>
+                <input type="file" id="logoUpload" accept="image/*">
+            </div>
+            <button id="previewBtn">Preview Website</button>
+        </section>
+        
+        <section class="preview-section">
+            <h2>Website Preview</h2>
+            <div class="preview-container" id="previewContainer">
+                <p>Your website preview will appear here after you enter your company name and upload a logo.</p>
+            </div>
+        </section>
+        
+        <section class="export-section">
+            <button id="exportBtn" class="export-btn">Export as HTML File</button>
+        </section>
+    </div>
+
+    <script>
+        // Horror trivia questions (50 questions from 1980s-2010s American horror films)
+        const horrorTrivia = [
+            {
+                question: "In 'A Nightmare on Elm Street' (1984), what is the name of the dream-stalking villain?",
+                answer: "Freddy Krueger"
+            },
+            {
+                question: "What 1978 film features Michael Myers stalking babysitters in Haddonfield, Illinois?",
+                answer: "Halloween"
+            },
+            {
+                question: "In 'The Shining' (1980), what is the famous line Jack Torrance repeatedly types?",
+                answer: "All work and no play makes Jack a dull boy"
+            },
+            {
+                question: "What 1982 film features a friendly alien who disguises itself as a boy's dog?",
+                answer: "E.T. the Extra-Terrestrial"
+            },
+            {
+                question: "In 'Poltergeist' (1982), what does the little girl say is in the television?",
+                answer: "They're here!"
+            },
+            {
+                question: "What 1986 film features a group of teenagers battling an inter-dimensional being?",
+                answer: "A Nightmare on Elm Street 3: Dream Warriors"
+            },
+            {
+                question: "In 'Child's Play' (1988), what is the name of the possessed doll?",
+                answer: "Chucky"
+            },
+            {
+                question: "What 1990 film features a serial killer who uses a ghostface mask?",
+                answer: "Scream"
+            },
+            {
+                question: "In 'The Silence of the Lambs' (1991), what is Hannibal Lecter's favorite food?",
+                answer: "Human flesh"
+            },
+            {
+                question: "What 1992 film features a cursed videotape that kills viewers after seven days?",
+                answer: "The Ring"
+            },
+            {
+                question: "In 'Candyman' (1992), how many times must you say his name to summon him?",
+                answer: "Five times"
+            },
+            {
+                question: "What 1999 film follows a group of documentary filmmakers in the woods?",
+                answer: "The Blair Witch Project"
+            },
+            {
+                question: "In 'The Sixth Sense' (1999), what is the boy's unique ability?",
+                answer: "He can see dead people"
+            },
+            {
+                question: "What 2002 film features a family trapped in their home by malevolent spirits?",
+                answer: "The Others"
+            },
+            {
+                question: "In '28 Days Later' (2002), what causes the zombie apocalypse?",
+                answer: "The rage virus"
+            },
+            {
+                question: "What 2004 film follows a group of friends who encounter a backwoods family?",
+                answer: "The Texas Chainsaw Massacre"
+            },
+            {
+                question: "In 'Saw' (2004), what is the name of the puppet used by the killer?",
+                answer: "Billy"
+            },
+            {
+                question: "What 2005 film features a family moving into a haunted farmhouse?",
+                answer: "The Amityville Horror"
+            },
+            {
+                question: "In 'The Descent' (2005), what type of creatures do the explorers encounter?",
+                answer: "Humanoid cave dwellers (Crawlers)"
+            },
+            {
+                question: "What 2007 film features a pregnant woman who believes her house is haunted?",
+                answer: "The Messengers"
+            },
+            {
+                question: "In 'Paranormal Activity' (2007), how do the homeowners document the haunting?",
+                answer: "With a video camera set up in their bedroom"
+            },
+            {
+                question: "What 2009 film follows a group of friends who get lost in catacombs?",
+                answer: "The Descent: Part 2"
+            },
+            {
+                question: "In 'Drag Me to Hell' (2009), what curse is placed on the main character?",
+                answer: "The Lamia curse"
+            },
+            {
+                question: "What 2010 film features a team entering the world of dreams?",
+                answer: "Inception"
+            },
+            {
+                question: "In 'Insidious' (2010), what is the name of the red-faced demon?",
+                answer: "Lipstick-Face Demon"
+            },
+            {
+                question: "What 2011 film follows a family dealing with a doppelgänger invasion?",
+                answer: "Us"
+            },
+            {
+                question: "In 'The Conjuring' (2013), what is the name of the haunted doll?",
+                answer: "Annabelle"
+            },
+            {
+                question: "What 2014 film features a family tormented by a supernatural entity?",
+                answer: "The Babadook"
+            },
+            {
+                question: "In 'It Follows' (2014), how is the curse passed from person to person?",
+                answer: "Through sexual intercourse"
+            },
+            {
+                question: "What 2015 film follows a family living in isolation?",
+                answer: "The Witch"
+            },
+            {
+                question: "In 'Get Out' (2017), what is the main character's profession?",
+                answer: "Photographer"
+            },
+            {
+                question: "What 2017 film features a killer clown in a small town?",
+                answer: "It"
+            },
+            {
+                question: "In 'Hereditary' (2018), what is the name of the cult that worships Paimon?",
+                answer: "The cult of Paimon"
+            },
+            {
+                question: "What 2018 film follows a family on a beach vacation that turns deadly?",
+                answer: "The Shallows"
+            },
+            {
+                question: "In 'A Quiet Place' (2018), why must the family remain silent?",
+                answer: "To avoid being hunted by creatures attracted to sound"
+            },
+            {
+                question: "What 2019 film features a doppelgänger family invading a home?",
+                answer: "Us"
+            },
+            {
+                question: "In 'Midsommar' (2019), what festival does the group attend in Sweden?",
+                answer: "The Midsommar festival"
+            },
+            {
+                question: "What 2020 film follows a woman who becomes trapped in an invisible box?",
+                answer: "The Invisible Man"
+            },
+            {
+                question: "In 'The Night House' (2020), what does the widow discover about her husband?",
+                answer: "He was building a reverse version of their house"
+            },
+            {
+                question: "What 1987 film features a group of friends battling an ancient evil?",
+                answer: "The Lost Boys"
+            },
+            {
+                question: "In 'Pet Sematary' (1989), what happens when things are buried in the ancient burial ground?",
+                answer: "They come back to life, but changed and evil"
+            },
+            {
+                question: "What 1995 film features a vampire hunter who is half-human, half-vampire?",
+                answer: "Blade"
+            },
+            {
+                question: "In 'The Craft' (1996), what is the name of the powerful witch who joins the group?",
+                answer: "Nancy Downs"
+            },
+            {
+                question: "What 1997 film follows a team investigating a haunted spaceship?",
+                answer: "Event Horizon"
+            },
+            {
+                question: "In 'I Know What You Did Last Summer' (1997), what is the weapon of choice for the killer?",
+                answer: "A hook"
+            },
+            {
+                question: "What 1998 film features a town plagued by a mysterious mist?",
+                answer: "The Mist"
+            },
+            {
+                question: "In 'The Faculty' (1998), what are the aliens vulnerable to?",
+                answer: "A drug made from caffeine"
+            },
+            {
+                question: "What 2001 film follows a team of paranormal investigators?",
+                answer: "Thir13en Ghosts"
+            },
+            {
+                question: "In 'Jeepers Creepers' (2001), how often does the Creeper awaken to feed?",
+                answer: "Every 23rd spring for 23 days"
+            },
+            {
+                question: "What 2006 film features a family trapped in their home by zombies?",
+                answer: "The Crazies"
+            }
+        ];
+
+        document.getElementById('previewBtn').addEventListener('click', function() {
+            const companyName = document.getElementById('companyName').value || 'Your Company Name';
+            const logoFile = document.getElementById('logoUpload').files[0];
+            const previewContainer = document.getElementById('previewContainer');
+            
+            // Clear previous preview
+            previewContainer.innerHTML = '';
+            
+            // Create logo preview if uploaded
+            if (logoFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const logoImg = document.createElement('img');
+                    logoImg.src = e.target.result;
+                    logoImg.alt = companyName + ' Logo';
+                    logoImg.className = 'logo-preview';
+                    previewContainer.appendChild(logoImg);
+                };
+                reader.readAsDataURL(logoFile);
+            }
+            
+            // Add company name
+            const companyNameElement = document.createElement('div');
+            companyNameElement.className = 'company-name';
+            companyNameElement.textContent = 'This Horror Trivia was brought to you by ' + companyName;
+            previewContainer.appendChild(companyNameElement);
+            
+            // Add trivia title
+            const triviaTitle = document.createElement('div');
+            triviaTitle.className = 'trivia-title';
+            triviaTitle.textContent = 'Classic American Horror Film Trivia (1980s-2010s)';
+            previewContainer.appendChild(triviaTitle);
+            
+            // Add click hint
+            const clickHint = document.createElement('div');
+            clickHint.className = 'click-hint';
+            clickHint.textContent = 'Click on each question to reveal the answer';
+            previewContainer.appendChild(clickHint);
+            
+            // Add trivia questions
+            horrorTrivia.forEach((item, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'trivia-question';
+                
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.textContent = 'Question ' + (index + 1) + ':';
+                questionElement.appendChild(questionNumber);
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.textContent = item.question;
+                questionElement.appendChild(questionText);
+                
+                const answer = document.createElement('div');
+                answer.className = 'answer';
+                answer.textContent = item.answer;
+                questionElement.appendChild(answer);
+                
+                // Add click event to reveal answer
+                questionElement.addEventListener('click', function() {
+                    answer.classList.toggle('revealed');
+                });
+                
+                previewContainer.appendChild(questionElement);
+            });
+        });
+
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            const companyName = document.getElementById('companyName').value || 'Your Company Name';
+            const logoFile = document.getElementById('logoUpload').files[0];
+            
+            let logoData = '';
+            if (logoFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    logoData = e.target.result;
+                    generateHTML(companyName, logoData);
+                };
+                reader.readAsDataURL(logoFile);
+            } else {
+                generateHTML(companyName, '');
+            }
+        });
+
+        function generateHTML(companyName, logoData) {
+            const faviconBase64 = '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';
+            let htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horror Trivia - ${companyName}</title>
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAQ6ElEQVR42u1ae5CcVZX/nXvv933dPdMzk2QyeRADhEmAicGVgJVsZDtBIg9RWdceFHUXReOCj7hboFiW29OWsuwqJauuq7hqrFVK0+4iGjEqOhkUiEBQNDMJeUleZF6ZV08/vu+795z9o2diAvxDMnlQlVN1q7q+7r71/X7nd865594LnLWzdtbO2lk7a2ftlWgiIFmf1bIe+njnoFciaBSyCgCoveBOdD7zigCdgwIyCuhiIjBQAy6fn1VnZ8z867jiXnPAxl9euHZXRIC84hUgACEHAjKK8l0OR4GSr180xwEZVriOha4IpvnnlYfiu+o+2PMpyWUM5bvsK5KAI9Lu7qcXgqj+58KLlVZXidB1omh5kNSNk0xVQz40Mnp44ew7+soQgOjlKeC0hkAuB9WxOEsAQFRwR6Sdg4lnLlxKpK51UNeC6FIvoQ0EiCJGpcwWgE3W64Sz8tU5d/SVJJcxRC/P+6dFAcfEcx585PndCxqtl1jOSt5Eiq5Smi7SCQ04QdUKBGJBRCBRIIjRRM7JcCJ2i/Dh7UM1El+e90+JAgQgZKHQliHKd9ka6C6ugW6dFylvpSJ1XaSQ8X09Fx4BsaASs8A6R0QEBUWkdM1hBBF2Xp02biz+Gn1k+2EZfPmxf1IVIAJCe1Yh++JSJZ+5eHEM80YYXCuEZX5SpUEAW0HEwiBhEClQzd8gQBRNvKkIFEQrEAuPBzy+CB/a24cO0NFqOi0KmJR2oadFjsRzAZB/ODcRz2u8jDSuhaKrI8hf+SmjIQIbO1RL7EhBQKRIkYKQAk24ZmKQTHxWROLYeUltKuN2HX10b6+0ZDXlj389YKYknju6XK0+T0j7nxc1Wy+1AoQ3xQpXGo8uoEADjhFZRrXkLAAigiKqwYc6SpM1wAKCSC22FRQgAlGKdFRyVbL2XgEI3QU5EQxTFgJy65IFzugrWdObROP1fkI3wxDgGKFjFhKuCRuTHiaQTHhZAAWgRoUAwgIi35BWmhDGDCgCE9tkvTbV8fA7ydu33Szrs/pEV4PmuBMbgNJNl7/GT9F1ovmakHB54OuEJoDZoVphRwSBqqUwItIQoRfJmwRCJBBxIlCBIUW+VgAQVuNBQJ6DMkuFAa1JxWVrlY0+PxXeB3BEeC8LPAHSnW3zlK9+4qX8z/naXKFEJaplttWKc1EMIacUmAwcKTiiiQE4EliAXG3AERQTBb4xCa2UjflgXI6+G5XDm4KouJBi+kXgGYJD6BujbIUfDO7c3Y1sVh1v4pu6JCgUo+xsVUSgyBzxstQSNmQig9UyAwuRkIImIoBrnlcKgHDZlqN1RsmPPYSbKb9rDADkn+YlJa3XuLIAQl5cZTHi7q4psDAloXvcBCwGUHaKRJMRFiYhiBIioUnwAicCBRYCeUZprQlRzBASQBEAES9QKorcfv8LWz98hNf/uCbAUMVFdqg9CPzmasVVE0kvqFTDX6Y+8+xTksspyufdVBCgTlABBFaoDSI4EnHEYsmKI/ahVaA9k9BGu0gGw5L9lTiKFSvAksASakMpybb5sj6rJQeFoY0x5bssO30Lx7BwZOCIEPNdNfZ7pix5n1gIOAUoBTCzMBhEKmFIkVEKwojC+CBF/CtF+KkfFn9VqqY9M532w0yohASwCnAEFHosFXp4MrOX7lyyNJEIroAj+ABXR6MfpO7Z2iU5qKnYB5gaApisMElAnlFaAWwRRbxHRfEvwPwTf/jwb2ljLZ4BYPQ9ly/SrlbrasVeAKXAMaFj8kfd/SQCCu8w74PFZleNC87anyfvfaZbBFRbb0ydnQABiyHu8AxFRKGLtxLFv1BONvjP79tMmw9UjkRJNqsxbY/CfVvsaOQ5aAKEIBCAeEIBR71Grf8nLkV30xd+v/9kL9yPn4Bikdjwp+KQnww2PLKFcFRnl8nU5m1pESoUnOQgBMhICIinJpBwLQWRAuJjkdXKW/d+ERA+uNTQN7bEfa9tv/p5Kv8GWzaUTysBk1tOtHFjCOCrx4BuaRH099Mk8Bf+N0AAcQKho1cVCrBGXqqh6iBQB7bY/qVr5rCmtXOfuPiXwIYzRAEAOjMZM9DSIu2FgqOuY9vR4vK/bVHavKrut4Utx/zJagByVB7QQPzisCaCSCanqStve8lfI0IXEvK11UOtPTr9BKyaAD25NEYmWxc5/WZW6i2eZ64pxeHTAN6wZcMaDdzHqAa1uIdMhECNAImZXnK53dXh9s3rSWryPmxZnj8ZrbuaklmyWUWAjFaD5b7fdL+nE+/QFDQJm9KLgDkDOF1LfM4A1gDOk44X7OZuyuQ0gcSfNftdzf60ZhEqnQwCpnZHyBrEkbgKOKwXkxRWxxAchgl42kFoogqIAGIA+9Lel7Ye/5D4t4cOIqzVmauASYBQBNGa2RiwoWPKG4AAAJyBWHNEAeIMxB17sDPp/UNm/o1pnb5w3DIJe2c+AbAGzB6ENdgZCB8LLAwDsNVHSBCrayM+lqhNXWBBxjjlf6LqSIQNHJ8U/FNLgLUajg0ce2A2YH5xhInTfwF+RAFH/S6T03nk+cDiZW9tUI2LKw4xxHvJuc68HECesPPAwnDkw/ELgjsMINqBIRAwamnAQNxR+a8LLADtpdTHIzbCzHDw4MQ78wmw4pNjHywMdh6cvJQCDIQEAoGIQODBuVoFkJwoyhPvvSi/OqUaXle0sYMYzeSDEZ/5IeBgwOLBiQ8WH+y8F6xxtbAzEOdN5AgDZzWL8/wOgDDREkUq+IQggLAnTmreP8MVkAVQAJyuxb4IHPlg9rEe2b9kwjABTjCIMeF9dglT55VsZW8HIMh34M+tyWWa0leOWscCT4uALRth0XLGK0CgxImZSIA+Yja2HQVXHJyjAaAKQMQXdh4sG9tAjd5oxW6xoX0nsusVgaRqUncaqifHHrN4ZNljhSRZ8f0zngBmX7N44tjQuAP71Lh8d+vnVq/am68KcorYEDsD67RtpAavGLrHRgeGVs/e+q0+KrS7reff8zqP6q8ftpYdjLasrVF13ri1oy6WO2ptVAedcQQUJvYnWfQwiyFQ4FUdsaNgpvabN+5ovec2Qp6rqk5YlJumGk2xan/9/P6DV8/f970RQLDlvM+fa/yZP7QIlBWDWLTzdYOJGQdHK6NXXvrn2x7uQAcR8lO6ITJ1ByPIKUKeuxd97t11uvG/RflBxdlYUaDTOqnGopF/bbIP3JtsXNEX2erPu//0+A0rsSkEOuiJucG0+vS5j3g62Tbuyo4EnNJ1XpUr2wbLA29+w/61uzszObOqK2+nOgRoanNAjYQ/LcivSPqzfuDp+nPGXBSDtEqppBY7utmjP3efu/2u93dmOs3KlgHZ9MRPvWmJqx9OmYYVo3bckkDSpt4rx+OPFYt9N/xN79oBwXpNaHdnfA4g5LkzkzNL9uQeHa3uX1G2lSfTuslzYnjMuZjMrGVFuaTt6XPuXbiqa5VFoYDG4Or1KTN9xbCtxAIjad3kjcXjG/aPb1v9N71rB9afRPAn73h84qWfmrMmFaSXfafOm/n2YVe1TkQaTNoLXXnQ2ZG3MyVvbPJbbj1sxyIAqkGnTTEcXvfT3e235AGeVBROotHJuxjxl5f/w8J1/5bwmj9e5FiciA10wnMcQZFGzM4ChHpVZ4rh4XuW7bnx9hxyCgDyJxn8Sb8iM7H7RwTipy749geMN+2/mHwdchQTaU+EHZGiJAWqHI98cvmu9rvXZ9frbCHLU7ntdera4RexS0Ig6cx0mst2v/cbYdR7NUk8UGfSHoNDRZ42MFSMBj6wfFf73Z2ZTtNeaD9l4E+pdWY6DQA8vuDehU9f+ODTO179qDx14UPF315w/1uO/v5UG53Q5adMRm96wfOVALByJQN5YFNGoavLATlCtod2/v71ZtGutWHnuWubWpKZr5Tc8LrX7bzl4aeWft1buuBh3tTfTwCwsqvLTW6/C0CbMjldew6ezCsCIWQ6NI569oo1eRmOkIkEedq6wYmjaQ7bl13qB+r2MHJcu8ADYQYC3zNROfy1crRfNTS9Jxoc/7aM1s9KJhqvL5bFshCINTEMNcDXI3H5Afrj/T8YuOSmL9Zrf2bFudK00Lsdz35rnAB5vvW9bcmE9ylPeTIYhd+n7fkNAtDeC25dfk5d84cORaM/nL/9Sw9INqtf6jBm6tvhntrRtFXuXN9LvNMXC1K6dsITWcD3IKGNReltqj51E42Ob3HKzIcXvMMYh6RKQJxG0Took4LEcXf/kndd0Zxq/phzERJBEr1udPcc4N8BQIw3rymYdpMFUC/B33UvXLOSdt73uz0qeLVJzLiJw+o+AA+gv41OSRWYZDk1MvwQitV5ZEdmR9X4/wBYWy29AaWxOeXR8CMMaFQiCya/cnjo0xgZnFMaG714JLLjw1F8qDQ+fF5puDrX2fIXWdXdOx45Hhqv3HK4GhW1Tt2xb94t0wUgFh2PxmQPVe0AUzrRFMwpbJvxvjTDH0SkbCSmclrKIG3cFVJh80H6/tY+hg4BZdjqPio82Tv94S2jYK0h2oC1nvnsY0V68qFe5uQBy4Fy7NPQNn2ofvt9h5iaVzX7LZeOhvxgy7Z13yrF8p1mf1Yzp5tuI0BCSaqEmm5iq382UHGfmemd/yrXfOG6UPxUCSnjKKlP2zpA1iz1JAcFS4DTNibxJQclALHTDGssO49rVyFyKuY4sJywMSe4YR40ASgjlS+7BCJqeuPuxXf2W2r8+yFn4FTDR6Qt60ecKFU5ZWM0eIt3fjbXUxp6qCE4522hmZkbiJWtcpIAYNNpWQgNLyD0ZImd1wSdMhSlDPIQZLNKYj8NajDOBvVAjgCgbKcpg7qGWJJz5x8oVHZc9MkPLEi2vvZQNey2Vn03dmZDFOvv9VWqnQuSF7U8w8v+pSKJuF7PMxWpmykQKlbDd/dF1WeagvNbk2auiVR9+qgCfGr3BKlQiABg/M2ZL2Gs/LNUurSDAEGh4MZXr74f49WDZPGbI7X7tdmh57ZFt5YdjU/U8r2xjW5DHP980c6790zOu2N6ruF53d/OwiPWuoP7wsE1jmUvgQT7MPzjObmrXKP37kCZMrN6pnaYsolP2UJo8q7g3iXvvcqIVx9tXb5xuH5Hesac3rRXhyKzt4xD77lvPtu8862zh9JNM8xcJyhFZRVX/PpSq5l+2YGx556Ik7Nax9hanrfij419W99l4bZcPmt4+33jc2nBWH3GBMGB0ljYNyM147KiqO4R/ejgq/jy948jenj19rfteOSSjdeMif3d9X+6fvh4j83NiXR7B6j/ZpCanbjksUQLyQyIqQCqF0rdqHz3+M2LxxYLg5mSFws4q5L4ShIUjFF11Uhl9NHG9Jx/bESqn/u3F1n577EOMXV9bOvmJf8zLzJ0F6TaEySCB5TRnzU8/t3pvKRkScoEuvmXF/3vozFHt/su/KxAfl3IFhQKcKcoBwiADnFiekVMbyRmp3PebMfBpVbwDMf+dkHi/DDWI1YlymGonmQxPyPlJZyYfUTJAd1wQSq0+vGYEudFcVQhBN3QwUIAsJHmWOQRQfRpq3R/VfjJWJkdjqlHKa+VQX2xLT/jw98vxr/gRJqnE2qHt7bdMj1R9Uzrnq/1711y6zRPGzP3D18eONj20fluTA9sPnAgamtr0340RIt2fTnciqzvt86m6cklM4tjBwd709MavXK1unTPJ8aevvib88e27T+4CnnbiZzZhDznAX6o9aHgul3XhT+68EfpG569odjZ9mArep5+bgCLZdbihrmZ7msOADhuAv4fMXE5o/ziynUAAAAASUVORK5CYII=">
+    <style>
+        body {
+            background-color: #121212;
+            color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .logo {
+            max-width: 200px;
+            max-height: 100px;
+            display: block;
+            margin: 0 auto 20px;
+        }
+        .company-name {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #ff4500;
+        }
+        .trivia-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #8b0000;
+        }
+        .click-hint {
+            text-align: center;
+            font-style: italic;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+        .trivia-question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #2a2a2a;
+            border-left: 4px solid #8b0000;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .trivia-question:hover {
+            background-color: #333;
+        }
+        .question-number {
+            font-weight: bold;
+            color: #ff4500;
+            margin-bottom: 10px;
+        }
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .answer {
+            display: none;
+            padding: 10px;
+            background-color: #1a1a1a;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-left: 3px solid #ff4500;
+        }
+        .answer.revealed {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">`;
+            
+            if (logoData) {
+                htmlContent += `\n        <img src="${logoData}" alt="${companyName} Logo" class="logo">`;
+            }
+            
+            htmlContent += `\n        <div class="company-name">This Horror Trivia was brought to you by ${companyName}</div>
+        <div class="trivia-title">Classic American Horror Film Trivia (1980s-2010s)</div>
+        <div class="click-hint">Click on each question to reveal the answer</div>`;
+            
+            horrorTrivia.forEach((item, index) => {
+                htmlContent += `\n        <div class="trivia-question" onclick="this.querySelector('.answer').classList.toggle('revealed')">
+            <div class="question-number">Question ${index + 1}:</div>
+            <div class="question-text">${item.question}</div>
+            <div class="answer">${item.answer}</div>
+        </div>`;
+            });
+            
+            htmlContent += `\n    </div>
+</body>
+</html>`;
+            
+            // Create and download the HTML file
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

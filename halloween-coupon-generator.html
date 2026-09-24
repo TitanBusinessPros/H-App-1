@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Halloween Gift Certificate Builder</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Creepster', cursive, Arial, sans-serif;
+            overflow-x: visible;
+            overflow-wrap: break-word;
+        }
+       
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #f0f0f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+       
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+       
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            border: 2px solid #ff6b35;
+            box-shadow: 0 0 15px rgba(255, 107, 53, 0.5);
+        }
+       
+        h1 {
+            font-size: 3rem;
+            color: #ff6b35;
+            text-shadow: 3px 3px 0 #000, 0 0 10px #ff6b35;
+            margin-bottom: 10px;
+        }
+       
+        .subtitle {
+            font-size: 1.5rem;
+            color: #ffd166;
+        }
+       
+        .builder-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+       
+        .controls {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #118ab2;
+            box-shadow: 0 0 15px rgba(17, 138, 178, 0.5);
+        }
+       
+        .preview {
+            flex: 2;
+            min-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+       
+        .certificate {
+            width: 100%;
+            max-width: 600px;
+            background: #1a1a2e;
+            border: 15px solid #ff6b35;
+            border-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M0,0 L100,0 L100,100 L0,100 Z' fill='none' stroke='%23ff6b35' stroke-width='10' stroke-dasharray='10,10'/%3E%3C/svg%3E") 30 round;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+        }
+       
+        .certificate-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffd166' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+            z-index: 0;
+        }
+       
+        .certificate-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+       
+        .certificate-title {
+            font-size: 3rem;
+            color: #ff6b35;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0 #000;
+        }
+       
+        .certificate-message {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #ffd166;
+        }
+       
+        .certificate-to, .certificate-from {
+            font-size: 1.8rem;
+            margin: 10px 0;
+            color: #06d6a0;
+        }
+       
+        .certificate-value {
+            font-size: 2.5rem;
+            color: #ef476f;
+            margin: 20px 0;
+            text-shadow: 2px 2px 0 #000;
+        }
+       
+        .certificate-code {
+            font-family: monospace;
+            font-size: 1.2rem;
+            background: #000;
+            padding: 10px;
+            display: inline-block;
+            margin: 20px 0;
+            color: #118ab2;
+            border: 1px dashed #118ab2;
+        }
+       
+        .certificate-footer {
+            margin-top: 30px;
+            font-size: 1rem;
+            color: #aaa;
+        }
+       
+        .control-group {
+            margin-bottom: 20px;
+        }
+       
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffd166;
+            font-size: 1.2rem;
+        }
+       
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #118ab2;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 1rem;
+        }
+       
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+       
+        .color-picker {
+            display: flex;
+            gap: 10px;
+        }
+       
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+       
+        .color-option.active {
+            border-color: #fff;
+            transform: scale(1.2);
+        }
+       
+        .export-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+       
+        button {
+            background: #ff6b35;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 120px;
+        }
+       
+        button:hover {
+            background: #ef476f;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+       
+        .size-btn {
+            background: #118ab2;
+        }
+       
+        .size-btn:hover {
+            background: #06d6a0;
+        }
+       
+        .instructions {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border: 2px solid #06d6a0;
+        }
+       
+        .instructions h2 {
+            color: #06d6a0;
+            margin-bottom: 10px;
+        }
+       
+        .instructions ol {
+            margin-left: 20px;
+        }
+       
+        .instructions li {
+            margin-bottom: 10px;
+        }
+       
+        @media (max-width: 768px) {
+            .builder-container {
+                flex-direction: column;
+            }
+           
+            .preview, .controls {
+                min-width: 100%;
+            }
+           
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Halloween Gift Certificate Builder</h1>
+            <p class="subtitle">Create spooky gift certificates and export them as PNG images!</p>
+        </header>
+       
+        <div class="builder-container">
+            <div class="controls">
+                <div class="control-group">
+                    <label for="title">Certificate Title</label>
+                    <input type="text" id="title" value="SPOOKY HALLOWEEN GIFT CERTIFICATE">
+                </div>
+               
+                <div class="control-group">
+                    <label for="message">Certificate Message</label>
+                    <textarea id="message">This certificate entitles the bearer to one night of frightful fun, tricks, and treats. Use it wisely or face the consequences!</textarea>
+                </div>
+               
+                <div class="control-group">
+                    <label for="to">To (Recipient)</label>
+                    <input type="text" id="to" value="A Very Brave Soul">
+                </div>
+               
+                <div class="control-group">
+                    <label for="from">From (Sender)</label>
+                    <input type="text" id="from" value="The Halloween Spirits">
+                </div>
+               
+                <div class="control-group">
+                    <label for="value">Certificate Value</label>
+                    <input type="text" id="value" value="One Night of Frightful Fun">
+                </div>
+               
+                <div class="control-group">
+                    <label for="code">Certificate Code</label>
+                    <input type="text" id="code" value="SP00KY-2023-GH0ST">
+                </div>
+               
+                <div class="control-group">
+                    <label for="expiry">Expiry Date</label>
+                    <input type="text" id="expiry" value="October 31, 2023">
+                </div>
+               
+                <div class="control-group">
+                    <label>Theme Color</label>
+                    <div class="color-picker">
+                        <div class="color-option active" style="background-color: #ff6b35;" data-color="#ff6b35"></div>
+                        <div class="color-option" style="background-color: #ef476f;" data-color="#ef476f"></div>
+                        <div class="color-option" style="background-color: #118ab2;" data-color="#118ab2"></div>
+                        <div class="color-option" style="background-color: #06d6a0;" data-color="#06d6a0"></div>
+                        <div class="color-option" style="background-color: #ffd166;" data-color="#ffd166"></div>
+                    </div>
+                </div>
+               
+                <div class="export-options">
+                    <button id="update-preview">Update Preview</button>
+                    <button class="size-btn" data-size="medium">Medium (600px)</button>
+                    <button class="size-btn" data-size="large">Large (800px)</button>
+                </div>
+            </div>
+           
+            <div class="preview">
+                <div class="certificate" id="certificate">
+                    <div class="certificate-bg"></div>
+                    <div class="certificate-content">
+                        <h2 class="certificate-title" id="preview-title">SPOOKY HALLOWEEN GIFT CERTIFICATE</h2>
+                        <p class="certificate-message" id="preview-message">This certificate entitles the bearer to one night of frightful fun, tricks, and treats. Use it wisely or face the consequences!</p>
+                        <p class="certificate-to" id="preview-to">To: A Very Brave Soul</p>
+                        <p class="certificate-from" id="preview-from">From: The Halloween Spirits</p>
+                        <p class="certificate-value" id="preview-value">One Night of Frightful Fun</p>
+                        <div class="certificate-code" id="preview-code">SP00KY-2023-GH0ST</div>
+                        <p class="certificate-footer">Valid until: <span id="preview-expiry">October 31, 2023</span></p>
+                    </div>
+                </div>
+                <p>Preview your certificate above. Use the controls to customize it, then export in your preferred size.</p>
+            </div>
+        </div>
+       
+        <div class="instructions">
+            <h2>How to Use This Builder</h2>
+            <ol>
+                <li>Customize your certificate using the form on the left</li>
+                <li>Click "Update Preview" to see your changes</li>
+                <li>Choose a color theme by clicking on the color options</li>
+                <li>Select your preferred size and click the corresponding export button</li>
+                <li>Your certificate will be downloaded as a PNG image</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get DOM elements
+            const titleInput = document.getElementById('title');
+            const messageInput = document.getElementById('message');
+            const toInput = document.getElementById('to');
+            const fromInput = document.getElementById('from');
+            const valueInput = document.getElementById('value');
+            const codeInput = document.getElementById('code');
+            const expiryInput = document.getElementById('expiry');
+            const colorOptions = document.querySelectorAll('.color-option');
+            const updatePreviewBtn = document.getElementById('update-preview');
+            const sizeButtons = document.querySelectorAll('.size-btn');
+            const certificate = document.getElementById('certificate');
+           
+            // Preview elements
+            const previewTitle = document.getElementById('preview-title');
+            const previewMessage = document.getElementById('preview-message');
+            const previewTo = document.getElementById('preview-to');
+            const previewFrom = document.getElementById('preview-from');
+            const previewValue = document.getElementById('preview-value');
+            const previewCode = document.getElementById('preview-code');
+            const previewExpiry = document.getElementById('preview-expiry');
+           
+            // Update preview function
+            function updatePreview() {
+                previewTitle.textContent = titleInput.value;
+                previewMessage.textContent = messageInput.value;
+                previewTo.textContent = `To: ${toInput.value}`;
+                previewFrom.textContent = `From: ${fromInput.value}`;
+                previewValue.textContent = valueInput.value;
+                previewCode.textContent = codeInput.value;
+                previewExpiry.textContent = expiryInput.value;
+            }
+           
+            // Color selection
+            colorOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    colorOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                   
+                    const color = this.getAttribute('data-color');
+                    certificate.style.borderColor = color;
+                    certificate.style.boxShadow = `0 0 20px ${color}80`;
+                });
+            });
+           
+            // Update preview button
+            updatePreviewBtn.addEventListener('click', updatePreview);
+           
+            // Export functionality
+            sizeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const size = this.getAttribute('data-size');
+                    exportCertificate(size);
+                });
+            });
+           
+            // Export certificate function
+            function exportCertificate(size) {
+                let width;
+               
+                switch(size) {
+                    case 'medium':
+                        width = 600;
+                        break;
+                    case 'large':
+                        width = 800;
+                        break;
+                    default:
+                        width = 600;
+                }
+               
+                // Update preview before exporting
+                updatePreview();
+               
+                // Use html2canvas to capture the certificate
+                html2canvas(certificate, {
+                    width: width,
+                    height: certificate.offsetHeight * (width / certificate.offsetWidth),
+                    scale: 2, // Higher quality
+                    backgroundColor: null
+                }).then(canvas => {
+                    // Convert canvas to image and trigger download
+                    const link = document.createElement('a');
+                    link.download = `halloween-certificate-${size}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            }
+           
+            // Initialize with current values
+            updatePreview();
+        });
+    </script>
+</body>
+</html>

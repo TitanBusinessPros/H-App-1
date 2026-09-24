@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <title>Halloween QR Code Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: #1a1a2e;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(139, 0, 0, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 107, 53, 0.2) 0%, transparent 20%);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            width: 100%;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            color: #ff6b35;
+            text-shadow: 2px 2px 0 #8b0000;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ffa500;
+            margin-bottom: 20px;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1000px;
+            width: 100%;
+        }
+        
+        .panel {
+            background: rgba(45, 20, 44, 0.9);
+            border: 3px solid #8b0000;
+            border-radius: 15px;
+            padding: 25px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 10px 25px rgba(139, 0, 0, 0.3);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ffa500;
+            font-size: 1.1rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: #2d142c;
+            border: 2px solid #ff6b35;
+            border-radius: 8px;
+            color: #f0f0f0;
+            font-size: 1rem;
+        }
+        
+        button {
+            background: #ff6b35;
+            color: #2d142c;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #ff8c42;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+        
+        #qrcode {
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 256px;
+            min-width: 256px;
+        }
+
+        #qrcode canvas {
+            display: block;
+            width: min(100%, 320px);
+            height: auto;
+            image-rendering: pixelated;
+        }
+        
+        .theme-preview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+            width: 100%;
+        }
+        
+        .theme-item {
+            background: #2d142c;
+            border: 2px solid #ff6b35;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .theme-item:hover {
+            transform: scale(1.05);
+            border-color: #ffa500;
+        }
+        
+        .theme-item.active {
+            border-color: #ffa500;
+            background: #3d1c3c;
+            box-shadow: 0 0 10px #ffa500;
+        }
+        
+        .theme-color {
+            height: 20px;
+            width: 100%;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        
+        .theme-name {
+            font-size: 0.9rem;
+            color: #ffa500;
+        }
+        
+        .download-btn {
+            margin-top: 20px;
+            width: auto;
+            padding: 10px 20px;
+        }
+        
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #ffa500;
+            font-size: 0.9rem;
+            padding: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .panel {
+                max-width: 100%;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+        
+        /* Halloween decorations */
+        .bat {
+            position: absolute;
+            font-size: 30px;
+            z-index: -1;
+            animation: fly 15s infinite linear;
+        }
+        
+        @keyframes fly {
+            0% { transform: translateX(-100px) translateY(0px); }
+            50% { transform: translateX(calc(100vw + 100px)) translateY(200px); }
+            100% { transform: translateX(-100px) translateY(0px); }
+        }
+        
+        .pumpkin {
+            position: absolute;
+            font-size: 40px;
+            bottom: 20px;
+            right: 20px;
+            z-index: -1;
+            animation: float 4s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .message {
+            color: #ff6b35;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Halloween decorations -->
+    <div class="bat">🦇</div>
+    <div class="bat" style="top: 15%; animation-delay: 2s;">🦇</div>
+    <div class="bat" style="top: 70%; animation-delay: 5s;">🦇</div>
+    <div class="pumpkin">🎃</div>
+
+    <header>
+        <h1>Halloween QR Code Generator</h1>
+        <p class="subtitle">Create spooky QR codes for your Halloween events!</p>
+    </header>
+
+    <div class="container">
+        <section class="panel">
+            <div class="input-group">
+                <label for="url-input">Enter URL or Text:</label>
+                <input type="text" id="url-input" placeholder="https://example.com or any text" value="https://example.com">
+            </div>
+            
+            <div class="input-group">
+                <label for="theme-select">Select Halloween Theme:</label>
+                <select id="theme-select">
+                    <option value="pumpkin">Pumpkin Orange</option>
+                    <option value="witch">Witch Purple</option>
+                    <option value="ghost">Ghost White</option>
+                    <option value="vampire">Vampire Red</option>
+                    <option value="zombie">Zombie Green</option>
+                    <option value="bat">Bat Black</option>
+                    <option value="candy">Candy Corn</option>
+                    <option value="haunted">Haunted House</option>
+                    <option value="fullmoon">Full Moon</option>
+                    <option value="spider">Spider Web</option>
+                    <option value="cauldron">Cauldron Bubble</option>
+                    <option value="graveyard">Graveyard</option>
+                </select>
+            </div>
+            
+            <button id="generate-btn">Generate QR Code</button>
+            
+            <div class="theme-preview">
+                <!-- Theme previews will be generated by JavaScript -->
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2>Your QR Code</h2>
+            <div id="qrcode">
+                <p class="message">Your QR code will appear here</p>
+            </div>
+            <button class="download-btn" id="download-btn">Download QR Code</button>
+        </section>
+    </div>
+
+    <footer>
+        <p>Made for Halloween | QR codes generated with qrcode-generator.js</p>
+    </footer>
+
+    <script>
+        // Define Halloween themes
+        const themes = {
+            pumpkin: { dark: '#8C2D00', light: '#FFFFFF', name: 'Pumpkin Orange' },
+            witch: { dark: '#3B1266', light: '#FFFFFF', name: 'Witch Purple' },
+            ghost: { dark: '#333333', light: '#FFFFFF', name: 'Ghost White' },
+            vampire: { dark: '#720000', light: '#FFFFFF', name: 'Vampire Red' },
+            zombie: { dark: '#245C13', light: '#FFFFFF', name: 'Zombie Green' },
+            bat: { dark: '#000000', light: '#FFFFFF', name: 'Bat Black' },
+            candy: { dark: '#805000', light: '#FFFFFF', name: 'Candy Corn' },
+            haunted: { dark: '#3A1766', light: '#FFFFFF', name: 'Haunted House' },
+            fullmoon: { dark: '#665300', light: '#FFFFFF', name: 'Full Moon' },
+            spider: { dark: '#303030', light: '#FFFFFF', name: 'Spider Web' },
+            cauldron: { dark: '#00585B', light: '#FFFFFF', name: 'Cauldron Bubble' },
+            graveyard: { dark: '#3A4A5A', light: '#FFFFFF', name: 'Graveyard' }
+        };
+
+        // Generate theme previews
+        const themePreview = document.querySelector('.theme-preview');
+        Object.keys(themes).forEach(themeKey => {
+            const theme = themes[themeKey];
+            const themeItem = document.createElement('div');
+            themeItem.className = 'theme-item';
+            themeItem.dataset.theme = themeKey;
+            
+            const colorDiv = document.createElement('div');
+            colorDiv.className = 'theme-color';
+            colorDiv.style.background = `linear-gradient(to right, ${theme.dark}, ${theme.light})`;
+            
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'theme-name';
+            nameDiv.textContent = theme.name;
+            
+            themeItem.appendChild(colorDiv);
+            themeItem.appendChild(nameDiv);
+            themePreview.appendChild(themeItem);
+            
+            // Set first theme as active
+            if (themeKey === 'pumpkin') {
+                themeItem.classList.add('active');
+            }
+            
+            // Add click event to theme items
+            themeItem.addEventListener('click', function() {
+                document.querySelectorAll('.theme-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.classList.add('active');
+                document.getElementById('theme-select').value = themeKey;
+                generateQRCode();
+            });
+        });
+
+        // Generate QR code function
+        function generateQRCode() {
+            const input = document.getElementById('url-input').value.trim();
+            const themeKey = document.getElementById('theme-select').value;
+            const theme = themes[themeKey];
+            
+            if (!input) {
+                alert('Please enter a URL or text!');
+                return;
+            }
+
+            const websitePattern = /^(?:www\.)?(?:[a-z0-9-]+\.)+[a-z]{2,}(?::\d+)?(?:[/?#].*)?$/i;
+            const data = !/^[a-z][a-z\d+.-]*:/i.test(input) && websitePattern.test(input)
+                ? `https://${input}`
+                : input;
+            
+            const qrcodeContainer = document.getElementById('qrcode');
+            qrcodeContainer.innerHTML = '';
+            
+            try {
+                // Use the qrcode-generator library
+                const typeNumber = 0; // Auto detect type
+                const errorCorrectionLevel = 'M';
+                
+                const qr = qrcode(typeNumber, errorCorrectionLevel);
+                qr.addData(data);
+                qr.make();
+                
+                // Use whole-pixel modules and a four-module quiet zone for reliable scanning.
+                const canvas = document.createElement('canvas');
+                const quietZone = 4;
+                const pixelsPerModule = 8;
+                const moduleCount = qr.getModuleCount();
+                const size = (moduleCount + quietZone * 2) * pixelsPerModule;
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                
+                // Set background color
+                ctx.fillStyle = theme.light;
+                ctx.fillRect(0, 0, size, size);
+                
+                // Draw QR code modules
+                ctx.fillStyle = theme.dark;
+                for (let row = 0; row < moduleCount; row++) {
+                    for (let col = 0; col < moduleCount; col++) {
+                        if (qr.isDark(row, col)) {
+                            ctx.fillRect(
+                                (col + quietZone) * pixelsPerModule,
+                                (row + quietZone) * pixelsPerModule,
+                                pixelsPerModule,
+                                pixelsPerModule
+                            );
+                        }
+                    }
+                }
+                
+                qrcodeContainer.appendChild(canvas);
+            } catch (error) {
+                console.error('Error generating QR code:', error);
+                qrcodeContainer.innerHTML = '<p class="message">Error generating QR code. Please try again.</p>';
+            }
+        }
+
+        // Download QR code function
+        function downloadQRCode() {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (!canvas) {
+                alert('Please generate a QR code first!');
+                return;
+            }
+            
+            try {
+                const link = document.createElement('a');
+                link.download = 'halloween-qr-code.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (error) {
+                console.error('Error downloading QR code:', error);
+                alert('Error downloading QR code. Please try again.');
+            }
+        }
+
+        // Event listeners
+        document.getElementById('generate-btn').addEventListener('click', generateQRCode);
+        document.getElementById('download-btn').addEventListener('click', downloadQRCode);
+        document.getElementById('theme-select').addEventListener('change', generateQRCode);
+
+        // Generate initial QR code on page load
+        window.addEventListener('load', generateQRCode);
+    </script>
+</body>
+</html>

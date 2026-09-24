@@ -1,0 +1,25 @@
+{
+  "id": "./",
+  "name": "Free Halloween Tools | Titan Business Pros",
+  "short_name": "Halloween Tools",
+  "description": "Free Halloween website makers and event tools from Titan Business Pros.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#170923",
+  "theme_color": "#170923",
+  "icons": [
+    {
+      "src": "images/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

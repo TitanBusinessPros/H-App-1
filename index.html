@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#170923">
+  <meta name="description" content="Make a free Halloween website with Titan Business Pros. Add spooky decorations, photos, colors, and sounds, then export your page.">
+  <title>Free Halloween Tools | Titan Business Pros</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <style>
+    :root { color-scheme: dark; --night:#170923; --panel:#24112f; --orange:#ff781f; --lime:#baff38; --white:#fff8ee; --muted:#e4d9e9; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--night); color:var(--white); font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    a { color:inherit; }
+    .cover { display:block; width:100%; height:auto; }
+    .witch-stage { position:relative; width:100%; height:clamp(260px,34vw,420px); overflow:hidden; pointer-events:none; }
+    .witch-stage img { position:absolute; top:50%; left:0; width:min(48vw,680px); height:auto; transform:translate(-110%,-50%); animation:main-witch-flight 18s linear infinite; will-change:transform; }
+    @keyframes main-witch-flight { from { transform:translate(-110%,-50%); } to { transform:translate(100vw,-50%); } }
+    @media(prefers-reduced-motion:reduce) { .witch-stage img { visibility:hidden; animation:none; } }
+    main { width:min(1080px, calc(100% - 36px)); margin:0 auto; padding:48px 0 72px; text-align:center; }
+    .eyebrow { color:var(--lime); font-size:.82rem; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+    h1,h2,h3,p { margin-top:0; }
+    h1 { max-width:760px; margin:10px auto 12px; font-size:clamp(2.25rem,6vw,4.6rem); line-height:1.04; letter-spacing:-.045em; }
+    .intro { max-width:850px; margin:0 auto 28px; color:var(--muted); font-size:clamp(1.05rem,2vw,1.25rem); }
+    .button { display:inline-flex; align-items:center; justify-content:center; min-height:54px; padding:13px 22px; border:2px solid var(--lime); border-radius:10px; background:var(--lime); color:#19121b; font-weight:900; text-decoration:none; box-shadow:0 5px 0 #688f16; transition:transform .16s,box-shadow .16s; }
+    .button:hover { transform:translateY(2px); box-shadow:0 3px 0 #688f16; }
+    .button:focus-visible { outline:3px solid white; outline-offset:4px; }
+    .makers { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-top:28px; }
+    .maker { padding:24px; border:1px solid #694071; border-radius:14px; background:linear-gradient(145deg,#2a1437,var(--panel)); }
+    .maker h2 { margin:0 0 9px; color:var(--orange); font-size:1.4rem; }
+    .maker p { color:var(--muted); }
+    .button-row { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; }
+    .app-download { display:inline-block; margin:0 auto 8px; padding:0; border:0; border-radius:12px; background:transparent; cursor:pointer; }
+    .app-download img { display:block; width:min(360px,80vw); height:auto; border-radius:12px; }
+    .app-download:focus-visible { outline:3px solid white; outline-offset:5px; }
+    .install-help { max-width:700px; margin:12px auto 0; color:var(--muted); }
+    .update-app { position:fixed; right:18px; bottom:18px; z-index:1000; max-width:calc(100vw - 36px); padding:14px 18px; border:2px solid var(--lime); border-radius:12px; background:var(--lime); color:#19121b; font:900 1rem/1.3 system-ui,sans-serif; box-shadow:0 6px 22px rgba(0,0,0,.45); cursor:pointer; }
+    .button.secondary { border-color:var(--orange); background:transparent; color:var(--white); box-shadow:none; }
+    .cta { margin-top:36px; padding:28px; border:1px solid #694071; border-radius:14px; background:#20102b; }
+    .cta h2 { margin:0 0 10px; font-size:clamp(1.5rem,4vw,2.2rem); }
+    .cta p { color:var(--muted); }
+    .math-battle { display:none; margin-top:48px; overflow:hidden; border:1px solid #694071; border-radius:14px; background:#0f0c29; }
+    .math-battle iframe { display:block; width:100%; height:1600px; border:0; background:#0f0c29; }
+    footer { padding:25px 18px 30px; border-top:2px solid #4c2e5a; background:#100719; text-align:center; color:#e9ddeb; }
+    footer p { margin:3px 0; }
+    footer .company { color:var(--orange); font-weight:800; }
+    @media(min-width:721px) { .math-battle { display:block; } }
+    @media(max-width:720px) { body { overflow-x:hidden; } .cover { width:120%; max-width:none; margin-left:-10%; } .witch-stage { height:clamp(120px,34vw,190px); } main { padding:12px 0 48px; } .makers { grid-template-columns:1fr; margin-top:34px; } .cta,.maker { padding:22px; } }
+    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { transition:none!important; } }
+  </style>
+</head>
+<body>
+  <img class="cover" src="images/Top%20image.png" alt="Titan Business Pros presents the Halloween Website Maker and free Halloween tools" fetchpriority="high">
+  <div class="witch-stage" aria-hidden="true"><img src="images/Witch.png" alt=""></div>
+  <button class="update-app" id="update-app" type="button" hidden>Update to our newest version</button>
+  <main>
+    <section aria-labelledby="welcome">
+      <span class="eyebrow">Free tools from Titan Business Pros LLC</span>
+      <h1 id="welcome">Free Halloween tools for all your needs!</h1>
+      <p class="intro">Make a free Halloween events website with either of our two website makers. Both are free forever and cost nothing. When you finish, export your <code>index.html</code> and add it to a GitHub repository to make it a live website.</p>
+      <p class="intro">After your website is live, use its web address to create a QR code for your event. Guests can scan the code to open your website.</p>
+      <button class="app-download" id="install-app" type="button" aria-label="Install the free Halloween tools app"><img src="images/Click%20to%20download.png" alt="Click to download the free Halloween tools app"></button>
+      <p class="install-help" id="install-help" role="status" hidden></p>
+      <section class="cta" aria-labelledby="publish-free">
+        <h2 id="publish-free">Your website can stay free forever</h2>
+        <p>The Free Halloween website maker downloads an <code>index.html</code> file. Put that file in a GitHub repository and publish it with GitHub Pages to make your website available online at no cost.</p>
+        <div class="button-row"><a class="button" href="https://www.youtube.com/watch?v=k_zVscN_gDY" target="_blank" rel="noopener noreferrer">Watch: Add your website to GitHub</a></div>
+        <h2 id="custom-site" style="margin-top:24px">Want a custom website and domain?</h2>
+        <p>We can turn your event site into a custom website and add your own custom domain for $25. There are no monthly fees or hosting fees. Call or text <a href="tel:+14059987979">405-998-7979</a>, or email <a href="mailto:titanbusinesspros@gmail.com">titanbusinesspros@gmail.com</a>.</p>
+      </section>
+      <div class="makers" aria-label="Choose one of two free Halloween website makers">
+        <article class="maker"><h2>Classic Website Maker</h2><p>Add Halloween icons, custom colors, photos, and spooky sounds.</p><a class="button" href="website-maker.html">Open the Classic Maker</a></article>
+        <article class="maker"><h2>Simple Website Maker</h2><p>Build a clean event page with three evenly sized photo uploads in one row and a choice of Halloween sounds.</p><a class="button" href="simple-halloween-website-maker.html">Open the Simple Maker</a></article>
+      </div>
+    </section>
+    <section class="cta" aria-labelledby="catering-generator">
+      <h2 id="catering-generator">Halloween Catering Generator</h2>
+      <p>Create a Halloween catering order form with customizable colors and menu options.</p>
+      <a class="button" href="halloween-catering-generator.html">Open the Halloween Catering Generator</a>
+    </section>
+    <section class="cta" aria-labelledby="coupon-generator">
+      <h2 id="coupon-generator">Halloween Coupon Generator</h2>
+      <p>Create a festive Halloween coupon for a special offer, party, or seasonal promotion.</p>
+      <a class="button" href="halloween-coupon-generator.html">Open the Halloween Coupon Generator</a>
+    </section>
+    <section class="cta" aria-labelledby="qr-generator">
+      <h2 id="qr-generator">Halloween QR Code Generator</h2>
+      <p>Turn a website address into a Halloween-themed QR code that visitors can scan.</p>
+      <a class="button" href="halloween-qr-code-generator.html">Open the Halloween QR Code Generator</a>
+    </section>
+    <section class="cta" aria-labelledby="horror-trivia-generator">
+      <h2 id="horror-trivia-generator">Horror Film Trivia Website Maker</h2>
+      <p>Build a horror-film trivia website, add your company name and logo, then export it as a free website.</p>
+      <a class="button" href="horror-film-trivia-website-maker.html">Open the Horror Film Trivia Website Maker</a>
+    </section>
+    <section class="cta" aria-labelledby="flyer-builder">
+      <h2 id="flyer-builder">Halloween Flyer Builder</h2>
+      <p>Design a Halloween party flyer and export a standard 11 × 8.5 inch landscape PNG.</p>
+      <a class="button" href="halloween-flyer-builder.html">Open the Halloween Flyer Builder</a>
+    </section>
+    <section class="cta" aria-labelledby="haunted-house-waiver">
+      <h2 id="haunted-house-waiver">Haunted House Waiver Generator</h2>
+      <p>Customize a haunted attraction’s name, entry rules, and theme, then download a ready-to-print waiver PNG.</p>
+      <a class="button" href="haunted-house-waiver-generator.html">Open the Haunted House Waiver Generator</a>
+    </section>
+    <section class="cta" aria-labelledby="spooky-flyer-builder">
+      <h2 id="spooky-flyer-builder">Spooky Flyer Builder</h2>
+      <p>Choose from 12 Halloween templates, customize event text and styling, arrange elements, and download a flyer as a PNG.</p>
+      <a class="button" href="spooky-flyer-builder.html">Open the Spooky Flyer Builder</a>
+    </section>
+    <section class="cta" aria-labelledby="start">
+      <h2 id="start">Your haunted website is just a few clicks away.</h2>
+      <p>Build a Halloween party invitation, haunted-house page, or another spooky idea of your own.</p>
+      <div class="button-row"><a class="button" href="website-maker.html">Classic Website Maker</a><a class="button secondary" href="simple-halloween-website-maker.html">Simple Website Maker</a></div>
+    </section>
+    <section class="math-battle" id="math-battle" aria-label="Halloween Math Battle">
+      <iframe id="math-battle-frame" data-src="halloween-math-battle.html" title="Halloween Math Battle: solve timed math questions and defend your haunted house" loading="eager"></iframe>
+    </section>
+  </main>
+  <footer>
+    <p class="company">Created by Titan Business Pros LLC</p>
+    <p>405-998-7979&nbsp; <a href="https://www.oklahoma.marketing">www.oklahoma.marketing</a>&nbsp; <a href="mailto:titanbusinesspros@gmail.com">Email us</a></p>
+    <p>Oklahoma City, OK</p>
+    <p>2026 Titan Business Pros LLC. All rights reserved.</p>
+  </footer>
+  <script>
+    let installPromptEvent = null;
+    const installAppButton = document.getElementById('install-app');
+    const installHelp = document.getElementById('install-help');
+    const updateAppButton = document.getElementById('update-app');
+    let appServiceWorkerRegistration = null;
+    let reloadAfterUpdate = false;
+    window.addEventListener('beforeinstallprompt', event => {
+      event.preventDefault();
+      installPromptEvent = event;
+    });
+    installAppButton.addEventListener('click', async () => {
+      if (!installPromptEvent) {
+        installHelp.textContent = 'To add this app to your device, open your browser menu and choose “Install app” or “Add to Home Screen.”';
+        installHelp.hidden = false;
+        return;
+      }
+      installPromptEvent.prompt();
+      await installPromptEvent.userChoice;
+      installPromptEvent = null;
+    });
+    window.addEventListener('appinstalled', () => {
+      installHelp.textContent = 'The Halloween Tools app was added to your device.';
+      installHelp.hidden = false;
+    });
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      const isInstalledApp = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+      navigator.serviceWorker.register('./service-worker.js').then(registration => {
+        appServiceWorkerRegistration = registration;
+        const showUpdateIfReady = () => {
+          if (isInstalledApp && registration.waiting && navigator.serviceWorker.controller) {
+            updateAppButton.hidden = false;
+          }
+        };
+        showUpdateIfReady();
+        registration.addEventListener('updatefound', () => {
+          const installingWorker = registration.installing;
+          if (installingWorker) installingWorker.addEventListener('statechange', showUpdateIfReady);
+        });
+        registration.update().then(showUpdateIfReady).catch(() => {});
+        window.setInterval(() => registration.update().then(showUpdateIfReady).catch(() => {}), 5 * 60 * 1000);
+      }).catch(() => {});
+      updateAppButton.addEventListener('click', () => {
+        if (!appServiceWorkerRegistration || !appServiceWorkerRegistration.waiting) return;
+        reloadAfterUpdate = true;
+        appServiceWorkerRegistration.waiting.postMessage({ type: 'ACTIVATE_UPDATE' });
+      });
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (reloadAfterUpdate) window.location.reload();
+      });
+    }
+
+    let mathBattleSizeObserver;
+    const mathBattleFrame = document.getElementById('math-battle-frame');
+    const mathBattleViewport = window.matchMedia('(min-width: 721px)');
+    const updateMathBattleForViewport = () => {
+      if (mathBattleViewport.matches) {
+        if (mathBattleFrame.getAttribute('src') !== mathBattleFrame.dataset.src) {
+          mathBattleFrame.src = mathBattleFrame.dataset.src;
+        }
+      } else {
+        mathBattleFrame.removeAttribute('src');
+        mathBattleFrame.style.height = '0px';
+      }
+    };
+    mathBattleFrame.addEventListener('load', () => {
+      if (!mathBattleViewport.matches) return;
+      try {
+        const resizeMathBattle = () => {
+          const gameDocument = mathBattleFrame.contentDocument;
+          if (!gameDocument) return;
+          mathBattleFrame.style.height = Math.max(
+            900,
+            gameDocument.documentElement.scrollHeight,
+            gameDocument.body.scrollHeight
+          ) + 'px';
+        };
+        resizeMathBattle();
+        if (mathBattleSizeObserver) mathBattleSizeObserver.disconnect();
+        mathBattleSizeObserver = new ResizeObserver(resizeMathBattle);
+        mathBattleSizeObserver.observe(mathBattleFrame.contentDocument.documentElement);
+      } catch (error) {
+        // Keep the responsive fallback height for local file previews with restricted iframe access.
+      }
+    });
+    updateMathBattleForViewport();
+    mathBattleViewport.addEventListener('change', updateMathBattleForViewport);
+  </script>
+</body>
+</html>
