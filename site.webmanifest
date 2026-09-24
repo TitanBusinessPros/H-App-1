@@ -1,8 +1,8 @@
 {
-  "id": "./",
-  "name": "Free Halloween Tools | Titan Business Pros",
-  "short_name": "Halloween Tools",
-  "description": "Free Halloween website makers and event tools from Titan Business Pros.",
+  "id": "https://titanbusinesspros.github.io/H-App-1/",
+  "name": "H-App-1 Halloween App | Titan Business Pros",
+  "short_name": "H-App-1",
+  "description": "The H-App-1 Halloween app with custom banners, advertising, and company branding.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
