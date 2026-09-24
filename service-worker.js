@@ -1,10 +1,10 @@
-const CACHE_NAME = 'titan-halloween-tools-v9';
+const CACHE_NAME = 'titan-halloween-tools-v10';
 const APP_SHELL = [
   './',
   './index.html',
   './site.webmanifest',
   './images/Top image.png',
-  './images/Witch.png',
+  './images/H-App-1-Ad.png',
   './images/Click to download.png',
   './images/favicon.png',
   './images/favicon.ico',
